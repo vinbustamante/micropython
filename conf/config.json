@@ -1,0 +1,20 @@
+{
+    "wifi": {
+        "ssid": "Redbean_24GHZ",
+        "pwd": "homeboys"
+    },
+    "mqtt": {
+        "client_id": "esp-01",
+        "hostname": "test.mosquitto.org",
+        "port": 1883,
+        "isSecured": true,
+        "ssl_params":{},
+        "username": "marvin",
+        "password": "redfield"
+    },
+    "log": {
+        "isEnable": false,
+        "path": "log",
+        "max_filecount": 10
+    }    
+}
