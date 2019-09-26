@@ -15,7 +15,8 @@ import onewire, ds18x20, machine
 CONFIG = 'conf/config.json'
 setting = Setting(CONFIG)
 logService = log.Log(setting)
-dht11 = dht.DHT11(machine.Pin(4))
+#dht11 = dht.DHT11(machine.Pin(4))
+dht11 = dht.DHT11(machine.Pin(2))
 adc = ADC(0)
 
 data = machine.Pin(14)
@@ -31,7 +32,7 @@ SERVICEBUS_SENSOR_VALUE = 'device/' + setting.mqtt_client_id + '/values'
 watcher = Watcher(logService, 45)
 watcher.run()
 
-led = Led(5)
+led = Led(0)
 buzzer = Led(12)
 
 def message_receive(topic, payload):
@@ -51,8 +52,8 @@ def connectToNetwork():
     networkService.connect(setting, logService)
 
 def createMessageBus():
-    #client = MQTTClient(setting.mqtt_client_id, setting.mqtt_hostname, 1883, user='marvin', password='redfield')
-    client = MQTTClient(setting.mqtt_client_id, setting.mqtt_hostname, 1883)
+    client = MQTTClient(setting.mqtt_client_id, setting.mqtt_hostname, 1883, user='marvin', password='redfield')
+    #client = MQTTClient(setting.mqtt_client_id, setting.mqtt_hostname, 1883)
     #client = MQTTClient(setting.mqtt_client_id, setting.mqtt_hostname, 1883)
     #client = MQTTClient(setting.mqtt_client_id, '192.168.0.105', 8883, ssl= True, ssl_params={"ca_certs":'/flash/certs/ca.pem', "certfile":"/flash/certs/esp.crt"})
     client.set_callback(message_receive)
@@ -65,30 +66,20 @@ def createMessageBus():
     client.publish(util.stringToBytes(SERVICEBUS_REGISTER_ADDRESS), util.toJson(deviceInfo))
     return client    
 
-# while True:
-#     try:
-#         watcher.watch(connectToNetwork)
-#         time.sleep(1) # wait for wifi
-#         client = watcher.watch(createMessageBus)
-#         while True:
-#             logService.log('Main: checking message')
-#             watcher.watch(lambda : client.check_msg())
-#             time.sleep(1)
-#             lightIntensity = adc.read()
-#             dht11.measure()
-#             ds.convert_temp()
-#             json = util.toJson({"temp": dht11.temperature(), "hum": dht11.humidity(), "light": lightIntensity, "temp2":  ds.read_temp(roms[0])})
-#             client.publish(util.stringToBytes(SERVICEBUS_SENSOR_VALUE), json)
-#     except Exception as e:
-#         logService.log('an error was encountered.' + str(e))
-#         time.sleep(3)
-
-
-# ultrasonic
-# from lib.hcsr04 import HCSR04
-
-# while True:
-#     sensor = HCSR04(trigger_pin=16, echo_pin=13)
-#     distance = sensor.distance_cm()
-#     print('Distance:', distance, 'cm')
-#     time.sleep(0.2)
+while True:
+    try:
+        watcher.watch(connectToNetwork)
+        time.sleep(1) # wait for wifi
+        client = watcher.watch(createMessageBus)
+        while True:
+            logService.log('Main: checking message')
+            watcher.watch(lambda : client.check_msg())
+            time.sleep(1)
+            lightIntensity = adc.read()
+            dht11.measure()
+            ds.convert_temp()
+            json = util.toJson({"temp": dht11.temperature(), "hum": dht11.humidity(), "light": lightIntensity, "temp2":  ds.read_temp(roms[0])})
+            client.publish(util.stringToBytes(SERVICEBUS_SENSOR_VALUE), json)
+    except Exception as e:
+        logService.log('an error was encountered.' + str(e))
+        time.sleep(3)

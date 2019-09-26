@@ -1,6 +1,7 @@
 import time
 import machine
 from machine import Timer
+from machine import Timer
 
 class Watcher:
     def __init__(self, logService, interval = 15, timerId = 1):

@@ -1,13 +1,13 @@
 {
     "wifi": {
-        "ssid": "Redbean_24GHZ",
-        "pwd": "homeboys"
+        "ssid": "Tigerspike_Guest",
+        "pwd": "billions"
     },
     "mqtt": {
         "client_id": "esp-01",
-        "hostname": "test.mosquitto.org",
+        "hostname": "vinbustamante.dlinkddns.com",
         "port": 1883,
-        "isSecured": true,
+        "isSecured": false,
         "ssl_params":{},
         "username": "marvin",
         "password": "redfield"

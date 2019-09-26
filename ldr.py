@@ -1,11 +1,9 @@
-from machine import ADC
 import time
 import machine
-
+from machine import ADC
 adc = ADC(0)
 
 while True:
-    lightIntensity = adc.read()
-    print('read : ', lightIntensity)
     time.sleep(1)
-
+    lightIntensity = adc.read()
+    print(lightIntensity)
